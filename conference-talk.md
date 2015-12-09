@@ -36,7 +36,7 @@ The issues list for this draft can be found at <https://github.com/darrelmiller/
 # Introduction
 In the technology world, one way we share knowledge is via conferences.  In order to have a conference we need speakers to do talks.  Conferences commonly go through a process called _call for proposals_ (CFP) where speakers who are interested submit talk proposals to the conference and then the conference organizers sift through these proposals and select the talks they believe will provide the best value to their attendees.
 
-There are a very wide range of methods used by conferences for collecting these proposals:  Google docs, Excel spreadsheets, plain text emails, wikis, custom web sites, commercial conference management systems.  Each of these systems have slightly different ways of collecting information that is mostly the same.  
+There are a very wide range of methods used by conferences for collecting these proposals:  Google docs, Excel spreadsheets, plain text emails, wikis, custom web sites, commercial conference management systems.  Each of these systems have slightly different ways of collecting information that is mostly the same.
 
 Many conferences are run by volunteers with minimal budgets and many speakers do so at their own expense.  Any possibility to improve the efficiency of the process of submitting proposals and processing them could provide significant value to a large number of conference participants.
 
@@ -79,52 +79,59 @@ The canonical model for a conference-talk document is a JSON object as defined i
 A minimal submission might look like this:
 
 ~~~~~~~~~~
-
-    { "proposal" : {
-     "title" : "An Introduction To Media Type Design",
-     "brief-description" : "Blah Blah Blah",
-     "presenter" : {
-       "name" : "Darrel Miller",
-       }
-      }}
-
+{
+  "proposal": {
+    "title": "An Introduction To Media Type Design",
+    "brief-description": "Blah Blah Blah",
+    "presenter": {
+      "name": "Darrel Miller"
+    }
+  }
+}
 ~~~~~~~~~~
 
 A more complete proposal might look like,
 
 ~~~~~~~~~~
-
-  { "proposal" : {
-    "title" : "An Introduction To Media Type Design",
-    "brief-description" : "Blah Blah Blah",
-    "full-description" : "Even longer blah Blah Blah",
-    "keywords" : ["javascript", "java", "http"],
-    "length" : {
-      "preferred" : 60,
-      "min" : 45,
-      "max" : 90
-    }
-    "presenter" : {
-      "name" : "Darrel Miller",
-      "email" : "darrel@example.com"
-      }
+{
+  "proposal": {
+    "title": "An Introduction To Media Type Design",
+    "brief-description": "Blah Blah Blah",
+    "full-description": "Even longer blah Blah Blah",
+    "keywords": [
+      "javascript",
+      "java",
+      "http"
+    ],
+    "length": {
+      "preferred": 60,
+      "min": 45,
+      "max": 90
     },
-    "co-presenters" : [{
-      "name" : "Bob Brown",
-      "email" : "bob@example.com"
-      }],
-    "past-presentations" : [{
-          "presentation-date" : "20150911",
-          "conference" : "UberConf"
-      }]
-  }
-
+    "presenter": {
+      "name": "Darrel Miller",
+      "email": "darrel@example.com"
+    }
+  },
+  "co-presenters": [
+    {
+      "name": "Bob Brown",
+      "email": "bob@example.com"
+    }
+  ],
+  "past-presentations": [
+    {
+      "presentation-date": "20150911",
+      "conference": "UberConf"
+    }
+  ]
+}
 ~~~~~~~~~~
 
 This specification is intended primarily to describe a message format that only exists to transfer information between two independent systems. It is not intended as a persistence format or a content creation format. JSON is ideal for this purpose. However, it should be fairly straightforward to apply the structure and semantics defined in this document to other formats.
 
 # Structure
-This media type is designed to hold information related to conference proposals, their presenters and the presentations of those sessions.  However, it imposes minimal structural constraints on the document. This is done in order to support as many scenarios as possible. A document instance may be used to submit a new proposal to a conference. Or it may be used to return a list of presentations that were held at a conference. It can also be used to return a list of presenters who will be speaking at a conference. The overall structure is fairly flexible, but the semantics of the named structures within the document are well defined.  
+This media type is designed to hold information related to conference proposals, their presenters and the presentations of those sessions.  However, it imposes minimal structural constraints on the document. This is done in order to support as many scenarios as possible. A document instance may be used to submit a new proposal to a conference. Or it may be used to return a list of presentations that were held at a conference. It can also be used to return a list of presenters who will be speaking at a conference. The overall structure is fairly flexible, but the semantics of the named structures within the document are well defined.
 
 A conference-talk document may be valid, but still incompatible with a particular resource that only accepts `conference-talk` documents structured in a certain way.
 
@@ -132,11 +139,11 @@ A conference-talk document may be valid, but still incompatible with a particula
 The root of the document MUST be a JSON object, whose properties names are structures defined in this vocabulary.
 
 ~~~~~~~~~~
-    {
-      "presenter" : {...} },
-      "proposals" : [...] },
-      "presentations" : [...] },
-    }
+{
+  "presenter" : {...} },
+  "proposals" : [...] },
+  "presentations" : [...] },
+}
 ~~~~~~~~~~
 
 There is no fixed structure to the root object. It can contain any number of properties that are either objects or arrays.
@@ -144,7 +151,7 @@ There is no fixed structure to the root object. It can contain any number of pro
 ## 1:1 Relationships
 Certain structures can contain other structures in a 1:1 relationship. E.g.
 
-- A `proposal` structure can contain a `presenter` structure to indicate the primary presenter.  
+- A `proposal` structure can contain a `presenter` structure to indicate the primary presenter.
 - A `presentation` structure can contain a `presenter` structure indicating who was the primary presenter of a past presentation.
 - A `presentation` structure can contain a `proposal` structure indicating the proposal that was submitted and selected for the presentation.
 - A `presentation` structure can contain a `conference` structure indicating the conference at which the presentation was presented.
@@ -181,34 +188,46 @@ The href property can resolve to a relative URI and use relative fragment identi
 
 For example, the sample below has an array of proposals, and each one points to a presenter structure and conference structure.
 ~~~~~~~~~~
-
-    { "proposals" : [{
-     "title" : "An Introduction To Media Type Design",
-     "brief-description" : "Blah Blah Blah",
-    "links" [
-      { "rel" : ".presenter", "href" : "#presenter"},
-      { "rel" : ".conference", "href" : "#conference"}
-    ]
+{
+  "proposals": [
+    {
+      "title": "An Introduction To Media Type Design",
+      "brief-description": "Blah Blah Blah",
+      "links": [
+        {
+          "rel": ".presenter",
+          "href": "#presenter"
+        },
+        {
+          "rel": ".conference",
+          "href": "#conference"
+        }
+      ]
     },
     {
-    "title" : "Crafting Evolvable Representations",
-    "brief-description" : "Double blah",
-    "links" [
-      { "rel" : ".presenter", "href" : "#presenter"},
-      { "rel" : ".conference", "href" : "#conference"}
-    ]
-    },
-    ],
-  "presenter" : {
-      "name" : "Darrel Miller",
-      "bio"  : "blah blah blah"
-    },
-  "conference" : {
-      "name" : "The Meta Conference",
-      "description"  : "The conference about conferences"
-     }
+      "title": "Crafting Evolvable Representations",
+      "brief-description": "Double blah",
+      "links": [
+        {
+          "rel": ".presenter",
+          "href": "#presenter"
+        },
+        {
+          "rel": ".conference",
+          "href": "#conference"
+        }
+      ]
     }
-
+  ],
+  "presenter": {
+    "name": "Darrel Miller",
+    "bio": "blah blah blah"
+  },
+  "conference": {
+    "name": "The Meta Conference",
+    "description": "The conference about conferences"
+  }
+}
 ~~~~~~~~~~
 
 # Vocabulary
@@ -316,13 +335,13 @@ An identifier selected from the list of available values as defined by the confe
 The `presentation` structure is a historical record of a talk described by a proposal structure that has been presented at a conference.
 
 ### presentation-date
-This property represents the date that a particular talk was given. The date should be in ISO 8601 format as required by I-JSON.  
+This property represents the date that a particular talk was given. The date should be in ISO 8601 format as required by I-JSON.
 
 ### conference
 The name of the conference where the presentation was given. This is a string value.
 
 ### location
-The physical location where conference is being held. This can simply country or city and country. This is a string value.  
+The physical location where conference is being held. This can simply country or city and country. This is a string value.
 
 ### special-requirements
 This is a free form text field used to communicate to the conference organizers any special hardware, setup, or environmental requirements needed for this talk to be presented. This is a string value.
@@ -331,7 +350,7 @@ This is a free form text field used to communicate to the conference organizers 
 This field is a number that provides an approximate quantity of people who attended the presentation.
 
 ## conference
-The `conference` structure is used to describe its purpose, its location, the timeline of events and the domains of valid values for properties like, `tags`, `talk-style` and `languages`.  It also can contain limits such as maximum lengths for `brief-description`, and `full-description`.   
+The `conference` structure is used to describe its purpose, its location, the timeline of events and the domains of valid values for properties like, `tags`, `talk-style` and `languages`.  It also can contain limits such as maximum lengths for `brief-description`, and `full-description`.
 
 ### talk-style-domain
 TK
